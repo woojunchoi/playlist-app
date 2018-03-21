@@ -6,6 +6,13 @@ const {
     GraphQLSchema
 } = graphql
 
+// dummy data
+var books = [
+    { name: 'Name of the Wind', genre: 'Fantasy', id: '1' },
+    { name: 'The Final Empire', genre: 'Fantasy', id: '2' },
+    { name: 'The Long Earth', genre: 'Sci-Fi', id: '3' },
+];
+
 const BookType = new GraphQLObjectType({
    name: 'Book',
    fields: () =>({
@@ -24,7 +31,11 @@ const RootQuery = new GraphQLObjectType({
                 id:{type:GraphQLString}
             },
             resolve(parentValue, args) {
-                args.id
+                for(let i=0; i<books.length; i++) {
+                    if(books[i].id === args.id) {
+                        return books[i]
+                    }
+                }
             }
         }
     })
