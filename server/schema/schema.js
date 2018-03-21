@@ -4,14 +4,19 @@ const {
     GraphQLObjectType,
     GraphQLString,
     GraphQLSchema,
-    GraphQLInt
+    GraphQLInt,
+    GraphQLID,
+    GraphQLList
 } = graphql
 
 // dummy data
 var books = [
-    { name: 'Name of the Wind', genre: 'Fantasy', id: '1' },
-    { name: 'The Final Empire', genre: 'Fantasy', id: '2' },
-    { name: 'The Long Earth', genre: 'Sci-Fi', id: '3' },
+    { name: 'Name of the Wind', genre: 'Fantasy', id: '1', authorId: '1' },
+    { name: 'The Final Empire', genre: 'Fantasy', id: '2', authorId: '2' },
+    { name: 'The Hero of Ages', genre: 'Fantasy', id: '4', authorId: '2' },
+    { name: 'The Long Earth', genre: 'Sci-Fi', id: '3', authorId: '3' },
+    { name: 'The Colour of Magic', genre: 'Fantasy', id: '5', authorId: '3' },
+    { name: 'The Light Fantastic', genre: 'Fantasy', id: '6', authorId: '3' },
 ];
 
 var authors = [
@@ -23,23 +28,35 @@ var authors = [
 const AuthorType = new GraphQLObjectType({
     name:'Author',
     fields: () => ({
-        id: {type: GraphQLString},
+        id: {type: GraphQLID},
         name: {type: GraphQLString},
-        age: {type: GraphQLInt}
+        age: {type: GraphQLInt},
+        books: {
+            type: new GraphQLList(BookType),
+            resolve(parentValue,args) {
+                let output = []
+                for(let i=0; i<books.length; i++) {
+                    if(parentValue.id === books[i].authorId) {
+                        output.push(books[i])
+                    }
+                }
+                return output
+            }
+        }
     })
 })
 
 const BookType = new GraphQLObjectType({
    name: 'Book',
    fields: () =>({
-       id: {type: GraphQLString},
+       id: {type: GraphQLID},
        name: {type: GraphQLString},
        genre : {type: GraphQLString},
        author: {
-           type:AuthorType,
+           type: AuthorType,
            resolve(parentValue,args) {
                for(let i=0; i<authors.length; i++) {
-                   if(authors[i].id === parentValue.id) {
+                   if(authors[i].id === parentValue.authorId) {
                        return authors[i]
                    }
                }
@@ -75,6 +92,18 @@ const RootQuery = new GraphQLObjectType({
                         return authors[i]
                     }
                 }
+            }
+        },
+        authors: {
+            type: new GraphQLList(AuthorType),
+            resolve(parentValue,args) {
+                return authors
+            }
+        },
+        books: {
+            type: new GraphQLList(BookType),
+            resolve(parentValue,args) {
+                return books
             }
         }
     })
