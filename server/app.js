@@ -3,6 +3,10 @@ const graphqlHTTP = require('express-graphql')
 const schema = require('./schema/schema')
 const mongoose = require('mongoose')
 const app = express()
+const cors = require('cors')
+
+//allow cross-origin requests
+app.use(cors())
 
 mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://woojunchoi:spdlxm123@ds257838.mlab.com:57838/woojunmongo')
