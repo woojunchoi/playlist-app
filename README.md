@@ -1,7 +1,7 @@
 # Reading List Project
 
 ## Front End Technologies:</br>ReactJS, JavaScript, HTML5, CSS3, GraphQL-Apollo
-## Back End Technologies:</br>NodeJS, Express, GraphQL, GraphQL, MongoDB, mLab
+## Back End Technologies:</br>NodeJS, Express, GraphQL, MongoDB, mLab
 
 #### Description
 
